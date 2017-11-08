@@ -8,6 +8,9 @@ typedef struct {
 	Node n;
 }msgq;
 
+void freemsgq(Node *p) {
+	free(container_of(p, msgq, n));
+}
 int main()
 {
 	unsigned long repeat = 1000000;
@@ -32,7 +35,7 @@ int main()
 		ms = pull_data(q, msgq, n);
 		printf("pulled2 = %d\n", ms->id);
 		free(ms);
-		destroy(q, NULL);
+		destroy(q, freemsgq);
 	}
 
 
