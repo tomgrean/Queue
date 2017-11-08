@@ -9,7 +9,6 @@
 #define QUEUE_H_
 
 typedef struct queue_node{
-	void *data;
 	struct queue_node *previous;
 } Node;
 
@@ -21,12 +20,13 @@ typedef struct queue{
 
 Queue *init();
 
-void push(Queue *q, void *data);
+int push(Queue *q, Node *element);
 
 void destroy(Queue *q, void (*gc)(void*));
 
-void *pull(Queue *q);
+Node *pull(Queue *q);
 
-void *head(Queue *q);
+Node *head(Queue *q);
 
 #endif /* QUEUE_H_ */
+

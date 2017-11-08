@@ -2,8 +2,6 @@
 #include <malloc.h>
 #include <string.h>
 
-static Node *init_node(void *data);
-
 /*
  * Queue *init()
  *
@@ -25,27 +23,30 @@ Queue *init()
 }
 
 /*
- * void push(Queue *q, void *data)
+ * void push(Queue *q, Node *element)
  *
- * pushes a node given the queue, the data and the size of the data
- * into the queue.
+ * pushes a node given the queue element
  * Note that there is a distinction in the code if the
  * queue is empty or not.
  *
+ * return 0 on success, -1 on error.
  */
-void push(Queue *q, void *data)
+int push(Queue *q, Node *element)
 {
-	Node *q_node = init_node(data);
+	if (q == NULL || element == NULL) {
+		return -1;
+	}
 	/* basically means if the queue is not empty */
 	if(q->queue_head) {
-		q->last_in_line->previous = q_node;
+		q->last_in_line->previous = element;
 	} else {
 		q->queue_head = q_node;
 	}
 	/* chaining everything to its place */
-	q->last_in_line = q_node;
+	q->last_in_line = element;
 	q_node->previous = NULL;
 	q->length++;
+	return 0;
 }
 
 /*
@@ -55,13 +56,13 @@ void push(Queue *q, void *data)
  * and destroys the queue.
  *
  */
-void destroy(Queue *q, void (*gc)(void*))
+void destroy(Queue *q, void (*gc)(Node*))
 {
 	if(q == NULL) {
 		return;
 	}
 	while(q->queue_head) {
-		void *tmp = pull(q);
+		Node *tmp = pull(q);
 		if (gc) {
 			gc(tmp);
 		}
@@ -72,58 +73,36 @@ void destroy(Queue *q, void (*gc)(void*))
 /*
  * void *pull(Queue *q)
  *
- * free the head element of the given queue and returns
- * its data
+ * get the head element of the given queue and return
  *
  */
-void *pull(Queue *q)
+Node *pull(Queue *q)
 {
-	void *data;
 	Node *temp;
 
 	if(q == NULL || q->queue_head == NULL) {
 		/* queue is empty */
 		return NULL;
 	}
-	data = q->queue_head->data;
 	temp = q->queue_head;
 	q->queue_head = q->queue_head->previous;
-	free(temp);
 	q->length--;
-	return data;
+	return temp;
 }
 
 /*
  * void *head(Queue *q)
  *
- * returns the data inside queue head (the first element)
+ * returns the queue head (the first element)
  * given a pointer to a queue if it isn't pointing to
  * 0
  *
  */
-void *head(Queue *q)
+Node *head(Queue *q)
 {
 	if (q) {
-		return q->queue_head->data;
+		return q->queue_head;
 	}
 	return NULL;
 }
 
-/*
- * Node *init_node(void *data)
- *
- * initialize a node - allocate size using malloc
- * for the node and the data, and return the node
- *
- */
-static Node *init_node(void *data)
-{
-	Node *q_node = malloc(sizeof(Node));
-	/* terminate if malloc has failed to allocate */
-	if (q_node == NULL) {
-		return NULL;
-	}
-	q_node->data = data;
-	q_node->previous = NULL;
-	return q_node;
-}
