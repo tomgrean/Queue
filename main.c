@@ -9,12 +9,12 @@ int main()
 	printf("Checking what happens if we do not free resources...");
 	getchar();
 
-	for(; repeat > 0; repeat--)
+//	for(; repeat > 0; repeat--)
 	{
 		Queue *q = init();
-		for(q_length = 1000; q_length > 0; q_length--)
+		for(q_length = 100; q_length > 0; q_length--)
 		{
-			push(q, q_length);
+			push(q, (void*)q_length);
 		}
 		printf("%ld\n", repeat);
 		destroy(q);
