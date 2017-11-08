@@ -40,11 +40,11 @@ int push(Queue *q, Node *element)
 	if(q->queue_head) {
 		q->last_in_line->previous = element;
 	} else {
-		q->queue_head = q_node;
+		q->queue_head = element;
 	}
 	/* chaining everything to its place */
 	q->last_in_line = element;
-	q_node->previous = NULL;
+	element->previous = NULL;
 	q->length++;
 	return 0;
 }
