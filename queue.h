@@ -9,8 +9,8 @@
 #define QUEUE_H_
 
 #define container_of(ptr, type, member) ({                 \
-	const typeof( ((type *)0)->member ) *__mptr = (ptr);   \
-	(type *)( (char *)__mptr - offsetof(type,member) );})
+	const typeof( ((type*)0)->member ) *__mptr = (ptr);   \
+	__mptr ? (type*)((char*)__mptr - offsetof(type,member)) : NULL;})
 
 typedef struct queue_node{
 	struct queue_node *previous;
